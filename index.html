@@ -280,8 +280,36 @@ function onInput() {
   }
 }
 
+function updateURL() {
+  var hash = '';
+  document.querySelectorAll('#cxi,#cyi,#ni,#ri,#si,#decimals').forEach(function(el) {
+    if (el.value === '') {
+      return;
+    }
+    if (hash === '') {
+      hash += '#';
+    } else {
+      hash += '&';
+    }
+    hash += `${el.id}=${el.value}`;
+  });
+  window.location.hash = hash;
+}
+
+if (window.location.hash !== '') {
+  window.location.hash.substring(1).split('&').forEach(function(kv) {
+    var [k,v] = kv.split('=');
+    var el = document.getElementById(k);
+    if (el) {
+      el.value = v;
+    }
+  });
+  calc();
+}
+
 document.querySelectorAll('#cxi,#cyi,#ni,#ri,#si,#decimals').forEach(function(el) {
   el.addEventListener('input', onInput);
+  el.addEventListener('input', updateURL);
 });
 
 </script>

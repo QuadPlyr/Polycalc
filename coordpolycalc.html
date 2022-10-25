@@ -1,0 +1,282 @@
+<!DOCTYPE HTML >
+<HTML>
+ <HEAD>
+  <TITLE>Coordinates of the vertices of a regular polygon with calculator</TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META http-equiv="content-type" content="text/html; charset=UTF-8">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="coordinates,polygon,vertex,calculator">
+  <META NAME="Description" CONTENT="This calculator takes the parameters of a regular polygon and calculates its coordinates.  It produces both the coordinates of the vertices and the coordinates of the line segments making up the sides of the polygon.">
+
+  <style>
+  input {width:120px}
+  </style>
+
+  <script>
+  var cx = 0;  //center x
+  var cy = 0;  //center y
+  var n = 4;   //number of sides
+  var r = 50;  //radius. Dist from center to a vertex
+  var ang;
+  var startAng;
+  var decimals;
+
+  function calc()
+  {   //collect inputs
+      cx = getInput('cxi'); 
+    if(isNaN(cx)) { alert("Center X must be a number");  return; }
+
+      cy = getInput('cyi');
+    if(isNaN(cy)) { alert("Center Y must be a number");  return; }
+
+    n =  getInput('ni');
+    if(isNaN(n) || n<3) { alert("Number of sides must be a number greater than 2");  return; }
+    n = Math.round(n);
+    var centerAng = 2*Math.PI / n;
+
+    r =  getInput('ri');
+    if(isNaN(r) || r<1) { alert("Radius must be a number greater than 0");  return; }
+
+    startAng = toRadians(getInput('si', 0));
+    if(isNaN(startAng)) { alert("Starting angle must be a number");  return; }
+
+    decimals = getInput('decimals');
+    if(isNaN(decimals)) { alert("Decimals must be a number");  return; }
+
+    //calculate the default start angle
+    if(document.getElementById('si').value.length==0) //none supplied
+       {  if(isOdd(n))
+           startAng = Math.PI/2;  //12 oclock
+      else
+         startAng = Math.PI/2 - centerAng/2;
+       }
+      
+      //create a vertex array
+    var vertex = new Array();
+    for(var i=0 ; i<n ; i++)
+      { ang = startAng + (i*centerAng);
+        vx = (cx + r*Math.cos(ang)).toFixed(decimals);
+        vy = (cy - r*Math.sin(ang)).toFixed(decimals);
+        // vx = Math.round(cx + r*Math.cos(ang));
+        // vy = Math.round(cy - r*Math.sin(ang)); 
+        vertex.push( {x:vx , y:vy} );
+      }
+
+      //make the vertex table from the array
+    var HTML = "<table border=1 cellpadding=8 cellspacing=0>";
+    HTML += "<tr><th>x</th><th>y</th></tr>";
+    for(var i=0 ; i<n ; i++)
+      {  HTML += "<tr>" + 
+          "<td>"+vertex[i].x+"</td>" +
+            "<td>"+vertex[i].y+"</td>" +
+           "</tr>";
+      }
+    HTML += "</table>"; 
+    document.getElementById('vertexOutputTable').innerHTML = HTML;
+
+
+    //Make vertices csv
+    var CSV = "";
+    for(var i=0 ; i<n ; i++)
+    { CSV += vertex[i].x  + "," + vertex[i].y + "<br>";
+    }
+    document.getElementById('vertexOutputCSV').innerHTML = CSV;
+    
+
+      //Make sides table
+    var HTML = "<table border=1 cellpadding=8 cellspacing=0 >";
+    HTML += "<tr><th>Start x</th><th>Start y</th><th>End x</th><th>End y</th></tr>";
+    for(var i=0 ; i<n ; i++)
+      {  HTML += "<tr>" + 
+          "<td>"+vertex[i].x+"</td>" +
+            "<td>"+vertex[i].y+"</td>" +
+          "<td>"+vertex[(i+1)%n].x+"</td>" +
+            "<td>"+vertex[(i+1)%n].y+"</td>" +
+           "</tr>";
+      }
+    HTML += "</table>"; 
+    document.getElementById('sideOutputTable').innerHTML = HTML;
+    
+
+    //Make sides CSV
+    var CSV = "";
+    for(var i=0 ; i<n ; i++)
+    { CSV += vertex[i].x  + "," + vertex[i].y + "," +  vertex[(i+1)%n].x  + "," + vertex[(i+1)%n].y + "<br>";
+    }
+    document.getElementById('sideOutputCSV').innerHTML = CSV;
+  }
+
+
+
+
+  function getInput(id)
+  //Get input from field id
+  // returns the input
+  {   return new Number( document.getElementById(id).value );
+  }
+
+
+
+
+  function toRadians(degs)
+  { return Math.PI*degs/180;
+  }
+
+
+
+  function isOdd(n)
+  { return (n%2 == 1);
+  }
+
+  </script>
+
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</HEAD>
+
+ <body>
+
+
+ <h1>Polygon vertex calculator</h1>
+<p>
+This calculator takes the parameters of a regular polygon and calculates its coordinates.  It produces both the coordinates of the 
+vertices and the coordinates of the line segments making up the sides of the polygon.
+</p>
+
+<p>
+It is useful to blind users and those who produce material for the sight-impaired.  
+The programs that emboss shapes on pages for the blind
+need the coordinates of the lines that make up the shape.   
+This page was designed to make it easy to produce the data needed by those programs (such as SVG Draw) to 'draw' regular polygons.
+</p>
+
+
+ <h2>Instructions</h2>
+ <p>
+ There are four headings on this page: 
+   <ol>
+     <li>Instructions
+     <li>Inputs
+     <li>List of sides
+     <li>List of vertices
+   </ol>
+ </p>
+
+ The inputs are as follows:
+ <p>
+ <ul>
+ <li>Center X and center Y are the coordinates of the center point of the polygon. Set initially to 550, 550. Note that the y coordinate is positive downwards, to conform to the convention in most computer software.  Positive x is to the right.
+ <li>The number of sides. Must be greater than 2.  Set initially to 5.
+ <li>The radius is the distance from the center to a vertex.  Set initially to 100.
+ <li>Start angle is the position of the first vertex.  
+     <p>
+   This angle is in degrees and is the angle starting at 3 o'clock going counter clockwise.   
+     So for example if you want the first vertex to be at 12 o'clock, set this to 90. Set initially to blank (auto).
+   </p>
+
+   <p>
+   If you leave this blank it will be set automatically: If the number of sides is odd,
+   (e.g. a pentagon), the first vertex will be at 12 o'clock.  
+   If even, e.g. an octagon, the top and bottom sides will be horizontal on the page.
+   </p>
+ </ul>
+ </p>
+
+ <p>
+ Click the 'Calculate' button to refresh the results.
+  Note that the y coordinates are  positive downwards, to conform to the convention in most computer software.  Positive x is to the right.
+ </p>
+
+ <p>
+ The sides output is a table containing the start and end x,y coordinates of each side of the polygon,
+ going counter clockwise from the first one. Below that is the same data in CSV format.
+ </p>
+
+ <p>
+ The vertex output is a table containing the x and y coordinates of each vertex of the polygon, going counter clockwise from the first one.
+ Below that is the same data in CSV format.
+ </p>
+
+
+
+<h2>Inputs</h2>
+
+<table cellspacing="3">
+<tr>
+  <td>Center x</td>
+  <td><input id="cxi" type="text" value="550"></input></td>
+</tr>
+<tr>
+  <td>Center y</td>
+  <td><input id="cyi" type="text" value="550"></input></td>
+</tr>
+<tr>
+  <td>Number of sides</td>
+  <td><input id="ni" type="text" value="5"></input></td>
+</tr>
+<tr>
+  <td>Radius</td>
+  <td><input id="ri" type="text" value="100"></input></td>
+</tr>
+<tr>
+  <td>Start angle (degrees)</td>
+  <td><input id="si" type="text"></input></td>
+</tr>
+<tr>
+  <td>Decimals</td>
+  <td><input id="decimals" type="text" placeholder="0"></input></td>
+</tr>
+<tr>
+  <td>Automatic calculation</td>
+  <td><input id="autocalc" type="checkbox" checked></input></td>
+</tr>
+</table>
+
+ <button onclick="calc()" style="margin:20px 0 0 100px">Calculate</button>
+
+
+  
+ <h2>Sides</h2>
+ <h3>As a table</h3>
+ <p id="sideOutputTable"></p>
+
+ <h3>As CSV</h3>
+ <p id="sideOutputCSV"></p> 
+
+ 
+ 
+ <h2 style="margin-top:60px">Vertices</h2>
+
+ <h3>As a table</h3>
+<p id="vertexOutputTable"></p>
+
+ <h3>As CSV</h3>
+ <p id="vertexOutputCSV"></p>
+
+
+
+
+<h2>Note</h2>
+<p>Copy of https://www.mathopenref.com/coordpolycalc.html made on 2022-10-25.</p>
+<p>(C) 2011 Copyright Math Open Reference. All rights reserved</p>
+
+
+<script>
+calc();
+
+var autocalc = document.getElementById('autocalc');
+function onInput() {
+  if (autocalc.checked) {
+    calc();
+  }
+}
+
+document.querySelectorAll('#cxi,#cyi,#ni,#ri,#si,#decimals').forEach(function(el) {
+  el.addEventListener('input', onInput);
+});
+
+</script>
+
+</BODY>
+</HTML>

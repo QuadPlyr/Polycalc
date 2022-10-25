@@ -7,9 +7,11 @@
   <META NAME="Author" CONTENT="">
   <META NAME="Keywords" CONTENT="coordinates,polygon,vertex,calculator">
   <META NAME="Description" CONTENT="This calculator takes the parameters of a regular polygon and calculates its coordinates.  It produces both the coordinates of the vertices and the coordinates of the line segments making up the sides of the polygon.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
   input {width:120px}
+  #error { color: red; }
   </style>
 
   <script>
@@ -20,40 +22,48 @@
   var ang;
   var startAng;
   var decimals;
+  
+  function error(text) {
+    document.getElementById('error').innerText = text;
+  }
 
   function calc()
   {   //collect inputs
       cx = getInput('cxi'); 
-    if(isNaN(cx)) { alert("Center X must be a number");  return; }
+    if(isNaN(cx)) { error("Center X must be a number");  return; }
 
       cy = getInput('cyi');
-    if(isNaN(cy)) { alert("Center Y must be a number");  return; }
+    if(isNaN(cy)) { error("Center Y must be a number");  return; }
 
     n =  getInput('ni');
-    if(isNaN(n) || n<3) { alert("Number of sides must be a number greater than 2");  return; }
+    if(isNaN(n) || n<3) { error("Number of sides must be a number greater than 2");  return; }
     n = Math.round(n);
     var centerAng = 2*Math.PI / n;
 
     r =  getInput('ri');
-    if(isNaN(r) || r<1) { alert("Radius must be a number greater than 0");  return; }
+    if(isNaN(r) || r<1) { error("Radius must be a number greater than 0");  return; }
 
     startAng = toRadians(getInput('si', 0));
-    if(isNaN(startAng)) { alert("Starting angle must be a number");  return; }
+    if(isNaN(startAng)) { error("Starting angle must be a number");  return; }
 
     decimals = getInput('decimals');
-    if(isNaN(decimals)) { alert("Decimals must be a number");  return; }
+    if(isNaN(decimals)) { error("Decimals must be a number");  return; }
+    
+    // clear error
+    error('');
 
     //calculate the default start angle
     if(document.getElementById('si').value.length==0) //none supplied
-       {  if(isOdd(n))
-           startAng = Math.PI/2;  //12 oclock
-      else
-         startAng = Math.PI/2 - centerAng/2;
+       {
+          if (isOdd(n))
+            startAng = Math.PI/2;  //12 oclock
+          else
+            startAng = Math.PI/2 - centerAng/2;
        }
       
-      //create a vertex array
+    //create a vertex array
     var vertex = new Array();
-    for(var i=0 ; i<n ; i++)
+    for(var i=0; i<n; i++)
       { ang = startAng + (i*centerAng);
         vx = (cx + r*Math.cos(ang)).toFixed(decimals);
         vy = (cy - r*Math.sin(ang)).toFixed(decimals);
@@ -64,10 +74,11 @@
 
       //make the vertex table from the array
     var HTML = "<table border=1 cellpadding=8 cellspacing=0>";
-    HTML += "<tr><th>x</th><th>y</th></tr>";
-    for(var i=0 ; i<n ; i++)
-      {  HTML += "<tr>" + 
-          "<td>"+vertex[i].x+"</td>" +
+    HTML += "<tr><th>side</th><th>x</th><th>y</th></tr>";
+    for(var i=0; i<n; i++) {
+        HTML += "<tr>" + 
+            "<td>"+(i+1)+"</td>" +
+            "<td>"+vertex[i].x+"</td>" +
             "<td>"+vertex[i].y+"</td>" +
            "</tr>";
       }
@@ -77,16 +88,16 @@
 
     //Make vertices csv
     var CSV = "";
-    for(var i=0 ; i<n ; i++)
-    { CSV += vertex[i].x  + "," + vertex[i].y + "<br>";
+    for(var i=0; i<n; i++) {
+      CSV += vertex[i].x  + "," + vertex[i].y + "<br>";
     }
     document.getElementById('vertexOutputCSV').innerHTML = CSV;
     
 
-      //Make sides table
+    //Make sides table
     var HTML = "<table border=1 cellpadding=8 cellspacing=0 >";
     HTML += "<tr><th>Start x</th><th>Start y</th><th>End x</th><th>End y</th></tr>";
-    for(var i=0 ; i<n ; i++)
+    for(var i=0; i<n; i++)
       {  HTML += "<tr>" + 
           "<td>"+vertex[i].x+"</td>" +
             "<td>"+vertex[i].y+"</td>" +
@@ -100,45 +111,32 @@
 
     //Make sides CSV
     var CSV = "";
-    for(var i=0 ; i<n ; i++)
-    { CSV += vertex[i].x  + "," + vertex[i].y + "," +  vertex[(i+1)%n].x  + "," + vertex[(i+1)%n].y + "<br>";
+    for (var i=0; i<n; i++) {
+      CSV += vertex[i].x  + "," + vertex[i].y + "," +  vertex[(i+1)%n].x  + "," + vertex[(i+1)%n].y + "<br>";
     }
     document.getElementById('sideOutputCSV').innerHTML = CSV;
   }
 
-
-
-
-  function getInput(id)
-  //Get input from field id
-  // returns the input
-  {   return new Number( document.getElementById(id).value );
+  function getInput(id) {
+    return new Number( document.getElementById(id).value );
   }
 
-
-
-
-  function toRadians(degs)
-  { return Math.PI*degs/180;
+  function toRadians(degs) {
+    return Math.PI*degs/180;
   }
 
-
-
-  function isOdd(n)
-  { return (n%2 == 1);
+  function isOdd(n) {
+    return (n%2 == 1);
   }
-
   </script>
-
- 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
 </HEAD>
 
  <body>
 
 
  <h1>Polygon vertex calculator</h1>
+ 
+<!--
 <p>
 This calculator takes the parameters of a regular polygon and calculates its coordinates.  It produces both the coordinates of the 
 vertices and the coordinates of the line segments making up the sides of the polygon.
@@ -198,34 +196,34 @@ This page was designed to make it easy to produce the data needed by those progr
  Below that is the same data in CSV format.
  </p>
 
+-->
 
-
-<h2>Inputs</h2>
+<h2>Input</h2>
 
 <table cellspacing="3">
 <tr>
   <td>Center x</td>
-  <td><input id="cxi" type="text" value="550"></input></td>
+  <td><input id="cxi" type="number" value="550"></input></td>
 </tr>
 <tr>
   <td>Center y</td>
-  <td><input id="cyi" type="text" value="550"></input></td>
+  <td><input id="cyi" type="number" value="550"></input></td>
 </tr>
 <tr>
   <td>Number of sides</td>
-  <td><input id="ni" type="text" value="5"></input></td>
+  <td><input id="ni" type="number" value="5" min="3"></input></td>
 </tr>
 <tr>
   <td>Radius</td>
-  <td><input id="ri" type="text" value="100"></input></td>
+  <td><input id="ri" type="number" value="100" min="1"></input></td>
 </tr>
 <tr>
   <td>Start angle (degrees)</td>
-  <td><input id="si" type="text"></input></td>
+  <td><input id="si" type="number"></input></td>
 </tr>
 <tr>
   <td>Decimals</td>
-  <td><input id="decimals" type="text" placeholder="0"></input></td>
+  <td><input id="decimals" type="number" placeholder="0" value="2"></input></td>
 </tr>
 <tr>
   <td>Automatic calculation</td>
@@ -233,9 +231,10 @@ This page was designed to make it easy to produce the data needed by those progr
 </tr>
 </table>
 
- <button onclick="calc()" style="margin:20px 0 0 100px">Calculate</button>
+ <button onclick="calc()" style="margin:10px 0 0 80px; padding: 10px 20px;">Calculate</button>
 
 
+<div style="display: none;">
   
  <h2>Sides</h2>
  <h3>As a table</h3>
@@ -244,23 +243,32 @@ This page was designed to make it easy to produce the data needed by those progr
  <h3>As CSV</h3>
  <p id="sideOutputCSV"></p> 
 
+</div>
  
- 
+<!--
  <h2 style="margin-top:60px">Vertices</h2>
 
  <h3>As a table</h3>
+-->
+ 
+ <h2>Output</h2>
+<div id="error"></div>
 <p id="vertexOutputTable"></p>
 
+<div style="display: none;">
+  
  <h3>As CSV</h3>
  <p id="vertexOutputCSV"></p>
 
+</div>
+ 
 
 
-
+<!--
 <h2>Note</h2>
 <p>Copy of https://www.mathopenref.com/coordpolycalc.html made on 2022-10-25.</p>
 <p>(C) 2011 Copyright Math Open Reference. All rights reserved</p>
-
+-->
 
 <script>
 calc();

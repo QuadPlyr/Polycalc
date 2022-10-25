@@ -22,14 +22,14 @@
   var ang;
   var startAng;
   var decimals;
-  
+
   function error(text) {
     document.getElementById('error').innerText = text;
   }
 
   function calc()
   {   //collect inputs
-      cx = getInput('cxi'); 
+      cx = getInput('cxi');
     if(isNaN(cx)) { error("Center X must be a number");  return; }
 
       cy = getInput('cyi');
@@ -48,7 +48,7 @@
 
     decimals = getInput('decimals');
     if(isNaN(decimals)) { error("Decimals must be a number");  return; }
-    
+
     // clear error
     error('');
 
@@ -60,7 +60,7 @@
           else
             startAng = Math.PI/2 - centerAng/2;
        }
-      
+
     //create a vertex array
     var vertex = new Array();
     for(var i=0; i<n; i++)
@@ -68,7 +68,7 @@
         vx = (cx + r*Math.cos(ang)).toFixed(decimals);
         vy = (cy - r*Math.sin(ang)).toFixed(decimals);
         // vx = Math.round(cx + r*Math.cos(ang));
-        // vy = Math.round(cy - r*Math.sin(ang)); 
+        // vy = Math.round(cy - r*Math.sin(ang));
         vertex.push( {x:vx , y:vy} );
       }
 
@@ -76,13 +76,13 @@
     var HTML = "<table border=1 cellpadding=8 cellspacing=0>";
     HTML += "<tr><th>side</th><th>x</th><th>y</th></tr>";
     for(var i=0; i<n; i++) {
-        HTML += "<tr>" + 
+        HTML += "<tr>" +
             "<td>"+(i+1)+"</td>" +
             "<td>"+vertex[i].x+"</td>" +
             "<td>"+vertex[i].y+"</td>" +
            "</tr>";
       }
-    HTML += "</table>"; 
+    HTML += "</table>";
     document.getElementById('vertexOutputTable').innerHTML = HTML;
 
 
@@ -92,22 +92,22 @@
       CSV += vertex[i].x  + "," + vertex[i].y + "<br>";
     }
     document.getElementById('vertexOutputCSV').innerHTML = CSV;
-    
+
 
     //Make sides table
     var HTML = "<table border=1 cellpadding=8 cellspacing=0 >";
     HTML += "<tr><th>Start x</th><th>Start y</th><th>End x</th><th>End y</th></tr>";
     for(var i=0; i<n; i++)
-      {  HTML += "<tr>" + 
+      {  HTML += "<tr>" +
           "<td>"+vertex[i].x+"</td>" +
             "<td>"+vertex[i].y+"</td>" +
           "<td>"+vertex[(i+1)%n].x+"</td>" +
             "<td>"+vertex[(i+1)%n].y+"</td>" +
            "</tr>";
       }
-    HTML += "</table>"; 
+    HTML += "</table>";
     document.getElementById('sideOutputTable').innerHTML = HTML;
-    
+
 
     //Make sides CSV
     var CSV = "";
@@ -135,24 +135,24 @@
 
 
  <h1>Polygon vertex calculator</h1>
- 
+
 <!--
 <p>
-This calculator takes the parameters of a regular polygon and calculates its coordinates.  It produces both the coordinates of the 
+This calculator takes the parameters of a regular polygon and calculates its coordinates.  It produces both the coordinates of the
 vertices and the coordinates of the line segments making up the sides of the polygon.
 </p>
 
 <p>
-It is useful to blind users and those who produce material for the sight-impaired.  
+It is useful to blind users and those who produce material for the sight-impaired.
 The programs that emboss shapes on pages for the blind
-need the coordinates of the lines that make up the shape.   
+need the coordinates of the lines that make up the shape.
 This page was designed to make it easy to produce the data needed by those programs (such as SVG Draw) to 'draw' regular polygons.
 </p>
 
 
  <h2>Instructions</h2>
  <p>
- There are four headings on this page: 
+ There are four headings on this page:
    <ol>
      <li>Instructions
      <li>Inputs
@@ -167,15 +167,15 @@ This page was designed to make it easy to produce the data needed by those progr
  <li>Center X and center Y are the coordinates of the center point of the polygon. Set initially to 550, 550. Note that the y coordinate is positive downwards, to conform to the convention in most computer software.  Positive x is to the right.
  <li>The number of sides. Must be greater than 2.  Set initially to 5.
  <li>The radius is the distance from the center to a vertex.  Set initially to 100.
- <li>Start angle is the position of the first vertex.  
+ <li>Start angle is the position of the first vertex.
      <p>
-   This angle is in degrees and is the angle starting at 3 o'clock going counter clockwise.   
+   This angle is in degrees and is the angle starting at 3 o'clock going counter clockwise.
      So for example if you want the first vertex to be at 12 o'clock, set this to 90. Set initially to blank (auto).
    </p>
 
    <p>
    If you leave this blank it will be set automatically: If the number of sides is odd,
-   (e.g. a pentagon), the first vertex will be at 12 o'clock.  
+   (e.g. a pentagon), the first vertex will be at 12 o'clock.
    If even, e.g. an octagon, the top and bottom sides will be horizontal on the page.
    </p>
  </ul>
@@ -235,33 +235,33 @@ This page was designed to make it easy to produce the data needed by those progr
 
 
 <div style="display: none;">
-  
+
  <h2>Sides</h2>
  <h3>As a table</h3>
  <p id="sideOutputTable"></p>
 
  <h3>As CSV</h3>
- <p id="sideOutputCSV"></p> 
+ <p id="sideOutputCSV"></p>
 
 </div>
- 
+
 <!--
  <h2 style="margin-top:60px">Vertices</h2>
 
  <h3>As a table</h3>
 -->
- 
+
  <h2>Output</h2>
 <div id="error"></div>
 <p id="vertexOutputTable"></p>
 
 <div style="display: none;">
-  
+
  <h3>As CSV</h3>
  <p id="vertexOutputCSV"></p>
 
 </div>
- 
+
 
 
 <!--

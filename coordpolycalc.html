@@ -203,19 +203,19 @@ This page was designed to make it easy to produce the data needed by those progr
 <table cellspacing="3">
 <tr>
   <td>Center x</td>
-  <td><input id="cxi" type="number" value="550"></input></td>
+  <td><input id="cxi" type="number"></input></td>
 </tr>
 <tr>
   <td>Center y</td>
-  <td><input id="cyi" type="number" value="550"></input></td>
+  <td><input id="cyi" type="number"></input></td>
 </tr>
 <tr>
   <td>Number of sides</td>
-  <td><input id="ni" type="number" value="5" min="3"></input></td>
+  <td><input id="ni" type="number" min="3"></input></td>
 </tr>
 <tr>
   <td>Radius</td>
-  <td><input id="ri" type="number" value="100" min="1"></input></td>
+  <td><input id="ri" type="number" min="1"></input></td>
 </tr>
 <tr>
   <td>Start angle (degrees)</td>
@@ -223,7 +223,7 @@ This page was designed to make it easy to produce the data needed by those progr
 </tr>
 <tr>
   <td>Decimals</td>
-  <td><input id="decimals" type="number" placeholder="0" value="2"></input></td>
+  <td><input id="decimals" type="number" placeholder="0" min="0"></input></td>
 </tr>
 <tr>
   <td>Automatic calculation</td>
@@ -271,7 +271,7 @@ This page was designed to make it easy to produce the data needed by those progr
 -->
 
 <script>
-calc();
+// calc();
 
 var autocalc = document.getElementById('autocalc');
 function onInput() {
